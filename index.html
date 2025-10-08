@@ -1,4 +1,4 @@
-created by @cryptoism_eth
+   created by @cryptoism_eth
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,9 +22,9 @@ created by @cryptoism_eth
       position: absolute;
       bottom: 50px;
       left: 100px;
-      width: 75px; /* önceki boyut %50 büyütüldü */
+      width: 75px;
       height: 75px;
-      background: red; /* player aynı */
+      background: red;
       border-radius: 10px;
     }
     .obstacle {
@@ -114,15 +114,15 @@ created by @cryptoism_eth
     let obstacleCount = 0;
     const maxObstacles = 200;
 
-    // 🌴 Kumsal arka planları
+    // 🌴 Farklı kumsal arka planları
     const backgrounds = [
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80"
+      "https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=90",
+      "https://images.unsplash.com/photo-1520962914527-2e0a197a43fc?auto=format&fit=crop&w=1600&q=80"
     ];
 
-    let bgIndex = 0; // arka plan sırası
+    let bgIndex = 0;
 
     window.onload = () => { startScreen.style.display = "block"; };
 
@@ -189,9 +189,9 @@ created by @cryptoism_eth
       obstacleCount++;
       counter.textContent = `${obstacleCount}/${maxObstacles}`;
 
-      if (obstacleCount % 5 === 0) obstacleSpeed *= 0.9; // %10 hız artışı
+      if (obstacleCount % 5 === 0) obstacleSpeed *= 0.9; 
 
-      // 🔄 Her 50 engelde arka plan değiştir
+      // 🔄 Arka plan değişimi
       if (obstacleCount % 50 === 0 && obstacleCount < maxObstacles) {
         bgIndex = (bgIndex + 1) % backgrounds.length;
         document.body.style.background = `url('${backgrounds[bgIndex]}') center/cover no-repeat`;
