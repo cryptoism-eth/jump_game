@@ -1,89 +1,68 @@
+index.html
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jump Game</title>
+    <title>Jump or Die</title>
     <style>
-      body {
-        background: #111;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
+
+      body {
+        background: #0a0a0a;
+        overflow: hidden;
+      }
+
       #game {
         position: relative;
-        width: 600px;
-        height: 200px;
-        background: #222;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(180deg, #111 0%, #222 100%);
         overflow: hidden;
-        border-radius: 10px;
       }
+
       #player {
         position: absolute;
         bottom: 50px;
-        left: 50px;
-        width: 30px;
-        height: 30px;
+        left: 100px;
+        width: 50px;
+        height: 50px;
         background: red;
+        border-radius: 8px;
       }
+
       #obstacle {
         position: absolute;
         bottom: 50px;
-        right: -30px;
-        width: 30px;
-        height: 30px;
+        right: -60px;
+        width: 50px;
+        height: 50px;
         background: lime;
+        border-radius: 8px;
       }
+
       #game-over {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         color: white;
-        font-size: 24px;
+        font-size: 40px;
+        font-family: sans-serif;
         display: none;
+        text-align: center;
       }
-    </style>
-  </head>
-  <body>
-    <div id="game">
-      <div id="player"></div>
-      <div id="obstacle"></div>
-      <div id="game-over">Game Over 😵</div>
-    </div>
 
-    <script>
-      const player = document.getElementById("player");
-      const obstacle = document.getElementById("obstacle");
-      const gameOver = document.getElementById("game-over");
-
-      let isJumping = false;
-      let gameActive = true;
-      let obstacleX = 600;
-
-      // Space veya dokunma ile zıpla
-      document.addEventListener("keydown", (e) => {
-        if (e.code === "Space" && !isJumping && gameActive) jump();
-      });
-      document.addEventListener("touchstart", () => {
-        if (!isJumping && gameActive) jump();
-      });
-
-      function jump() {
-        isJumping = true;
-        let pos = 0;
-        const up = setInterval(() => {
-          if (pos >= 120) {
-            clearInterval(up);
-            const down = setInterval(() => {
-              if (pos <= 0) {
-                clearInterval(down);
-                isJumping = false;
-              }
-              pos -= 10;
-              player.style.bottom = 50 + pos + "px";
-            }, 15);
-          }
-          pos += 10
+      #restart {
+        display: none;
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 25px;
+        background:
