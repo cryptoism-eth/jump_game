@@ -1,4 +1,4 @@
-build by @cryptoism_eth x address
+created by @cryptoism_eth
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,8 +32,13 @@ build by @cryptoism_eth x address
       width: 50px;
       height: 50px;
       background: green;
+      animation: move linear forwards;
     }
-    #gameOver, #startScreen {
+    @keyframes move {
+      from { right: -50px; }
+      to { right: 100vw; }
+    }
+    #gameOver, #startScreen, #winner {
       display: none;
       position: absolute;
       top: 40%;
@@ -41,6 +46,15 @@ build by @cryptoism_eth x address
       text-align: center;
       font-size: 40px;
       color: #333;
+    }
+    #counter {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 28px;
+      font-weight: bold;
+      color: #222;
     }
     button {
       margin-top: 20px;
@@ -57,14 +71,16 @@ build by @cryptoism_eth x address
 <body>
   <div id="game">
     <div id="player"></div>
+    <div id="counter">0/500</div>
     <div id="startScreen">
       <div>Jump or Die Bitches</div>
-      <button onclick="startGame()">Start Game And Click Space</button>
+      <button onclick="startGame()">Start Game</button>
     </div>
     <div id="gameOver">
-      Game Over Bitches
+      Game Over
       <br><button onclick="restart()">Restart</button>
     </div>
+    <div id="winner">Winner Bitches 😎</div>
   </div>
 
   <script>
@@ -72,13 +88,15 @@ build by @cryptoism_eth x address
     const game = document.getElementById("game");
     const gameOver = document.getElementById("gameOver");
     const startScreen = document.getElementById("startScreen");
+    const winnerScreen = document.getElementById("winner");
+    const counter = document.getElementById("counter");
 
     let isJumping = false;
     let gameActive = false;
     let obstacleInterval;
-    let baseSpeed = 500;   // 🚀 Başlangıç hızı artırıldı (önceden 5'ti)
-    let currentSpeed = baseSpeed;
+    let obstacleSpeed = 2.0; // saniye cinsinden animasyon süresi
     let obstacleCount = 0;
+    const maxObstacles = 500;
 
     window.onload = () => {
       startScreen.style.display = "block";
@@ -113,12 +131,12 @@ build by @cryptoism_eth x address
     }
 
     function spawnObstacle() {
+      if (!gameActive) return;
+
       const obstacle = document.createElement("div");
       obstacle.classList.add("obstacle");
-      obstacle.style.right = "-50px";
+      obstacle.style.animationDuration = obstacleSpeed + "s";
       game.appendChild(obstacle);
-
-      let pos = -50;
 
       const move = setInterval(() => {
         if (!gameActive) {
@@ -126,9 +144,6 @@ build by @cryptoism_eth x address
           obstacle.remove();
           return;
         }
-
-        pos += currentSpeed;
-        obstacle.style.right = pos + "px";
 
         const obstacleRect = obstacle.getBoundingClientRect();
         const playerRect = player.getBoundingClientRect();
@@ -143,51 +158,66 @@ build by @cryptoism_eth x address
 
         if (horizontallyTouching && verticallyTouching) {
           clearInterval(move);
-          gameOver.style.display = "block";
-          gameActive = false;
-          clearInterval(obstacleInterval);
-          obstacle.remove();
+          gameOverScreen();
         }
 
-        if (obstacleRect.right >= window.innerWidth + 50) {
+        if (obstacleRect.left <= 0) {
           obstacle.remove();
           clearInterval(move);
-
-          if (gameActive) {
-            obstacleCount++;
-
-            // 🔥 Her 10 engelde bir hız %20 artıyor
-            if (obstacleCount % 10 === 0) {
-              currentSpeed = baseSpeed * (1 + 0.2 * (obstacleCount / 10));
-              console.log("Hız arttı:", currentSpeed);
-            }
-          }
+          obstaclePassed();
         }
       }, 20);
+    }
+
+    function obstaclePassed() {
+      if (!gameActive) return;
+      obstacleCount++;
+      counter.textContent = `${obstacleCount}/${maxObstacles}`;
+
+      // 💨 her 5 engelde bir %50 hızlan
+      if (obstacleCount % 5 === 0) {
+        obstacleSpeed *= 0.66; // %50 hız artışı ≈ sürenin 0.66'sı
+      }
+
+      // 🎯 500 engel geçtiyse oyun bitti
+      if (obstacleCount >= maxObstacles) {
+        gameActive = false;
+        clearInterval(obstacleInterval);
+        winnerScreen.style.display = "block";
+      }
+    }
+
+    function gameOverScreen() {
+      gameOver.style.display = "block";
+      gameActive = false;
+      clearInterval(obstacleInterval);
     }
 
     function startGame() {
       startScreen.style.display = "none";
       gameOver.style.display = "none";
+      winnerScreen.style.display = "none";
       gameActive = true;
-      baseSpeed = 15; // Başlangıç hızı
-      currentSpeed = baseSpeed;
       obstacleCount = 0;
+      obstacleSpeed = 2.0;
+      counter.textContent = `0/${maxObstacles}`;
       spawnObstacle();
       obstacleInterval = setInterval(() => {
         if (gameActive) spawnObstacle();
-      }, 2000);
+      }, 1500);
     }
 
     function restart() {
       gameOver.style.display = "none";
+      winnerScreen.style.display = "none";
       gameActive = true;
-      currentSpeed = baseSpeed;
       obstacleCount = 0;
+      obstacleSpeed = 2.0;
+      counter.textContent = `0/${maxObstacles}`;
       spawnObstacle();
       obstacleInterval = setInterval(() => {
         if (gameActive) spawnObstacle();
-      }, 2000);
+      }, 1500);
     }
   </script>
 </body>
