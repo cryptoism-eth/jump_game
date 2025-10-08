@@ -33,7 +33,6 @@
       bottom: 50px;
       width: 40px;
       height: 40px;
-      background: green;
       animation: move linear forwards;
     }
 
@@ -125,11 +124,18 @@
       "/images/background1.png",
       "/images/background2.png",
       "/images/background3.png",
-      "/images/background4.png",
-      
+      "/images/background4.png"
     ];
 
     let bgIndex = 0;
+
+    // Engel rengini belirle
+    function getObstacleColor(count) {
+      if (count < 50) return "black";
+      if (count < 100) return "white";
+      if (count < 150) return "yellow";
+      return "black";
+    }
 
     window.onload = () => { startScreen.style.display = "block"; };
 
@@ -164,6 +170,7 @@
       const obstacle = document.createElement("div");
       obstacle.classList.add("obstacle");
       obstacle.style.animationDuration = obstacleSpeed + "s";
+      obstacle.style.background = getObstacleColor(obstacleCount);
       game.appendChild(obstacle);
 
       const move = setInterval(() => {
