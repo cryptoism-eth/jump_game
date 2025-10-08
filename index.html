@@ -75,8 +75,9 @@
     let isJumping = false;
     let gameActive = false;
     let obstacleInterval;
-    let speed = 5; // başlangıç hızı
-    let obstacleCount = 0; // kaç engel geçti sayısı
+    let baseSpeed = 5;   // Başlangıç hızı (değişmeyecek referans)
+    let currentSpeed = 5; // Dinamik hız
+    let obstacleCount = 0; // Geçilen engel sayısı
 
     window.onload = () => {
       startScreen.style.display = "block";
@@ -125,7 +126,7 @@
           return;
         }
 
-        pos += speed;
+        pos += currentSpeed;
         obstacle.style.right = pos + "px";
 
         const obstacleRect = obstacle.getBoundingClientRect();
@@ -151,12 +152,13 @@
           obstacle.remove();
           clearInterval(move);
 
-          // Engel geçtiyse sayacı artır
           if (gameActive) {
             obstacleCount++;
+
+            // 🔥 Her 10 engelde bir hız %20 artıyor
             if (obstacleCount % 10 === 0) {
-              speed *= 1.2; // %20 hız artışı
-              console.log("Speed increased to:", speed);
+              currentSpeed = baseSpeed * (1 + 0.2 * (obstacleCount / 10));
+              console.log("Hız arttı:", currentSpeed);
             }
           }
         }
@@ -167,7 +169,8 @@
       startScreen.style.display = "none";
       gameOver.style.display = "none";
       gameActive = true;
-      speed = 5;
+      baseSpeed = 5;
+      currentSpeed = 5;
       obstacleCount = 0;
       spawnObstacle();
       obstacleInterval = setInterval(() => {
@@ -178,7 +181,7 @@
     function restart() {
       gameOver.style.display = "none";
       gameActive = true;
-      speed = 5;
+      currentSpeed = 5;
       obstacleCount = 0;
       spawnObstacle();
       obstacleInterval = setInterval(() => {
