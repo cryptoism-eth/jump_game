@@ -1,9 +1,0 @@
-jump-game/           ← Repo kökü
-│
-├─ index.html
-├─ player.png
-└─ images/
-     ├─ background1.png
-     ├─ background2.png
-     ├─ background3.png
-     └─ background4.png
