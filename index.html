@@ -1,4 +1,4 @@
-created by @cryptoism_eth
+created by @cryptoism
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +10,7 @@ created by @cryptoism_eth
       overflow: hidden;
       background: linear-gradient(180deg, #87CEFA, #fff);
       font-family: sans-serif;
+      transition: background 1s ease;
     }
     #game {
       position: relative;
@@ -174,9 +175,14 @@ created by @cryptoism_eth
       obstacleCount++;
       counter.textContent = `${obstacleCount}/${maxObstacles}`;
 
-      // 💨 her 5 engelde bir %50 hızlan
+      // 💨 her 5 engelde bir %10 hızlan
       if (obstacleCount % 5 === 0) {
-        obstacleSpeed *= 0.66; // %50 hız artışı ≈ sürenin 0.66'sı
+        obstacleSpeed *= 0.9;
+      }
+
+      // 🌈 her 100 engelde bir arka plan değiştir
+      if (obstacleCount % 100 === 0) {
+        changeBackground();
       }
 
       // 🎯 500 engel geçtiyse oyun bitti
@@ -185,6 +191,12 @@ created by @cryptoism_eth
         clearInterval(obstacleInterval);
         winnerScreen.style.display = "block";
       }
+    }
+
+    function changeBackground() {
+      const randomColor1 = `hsl(${Math.random() * 360}, 80%, 70%)`;
+      const randomColor2 = `hsl(${Math.random() * 360}, 80%, 85%)`;
+      document.body.style.background = `linear-gradient(180deg, ${randomColor1}, ${randomColor2})`;
     }
 
     function gameOverScreen() {
@@ -201,6 +213,7 @@ created by @cryptoism_eth
       obstacleCount = 0;
       obstacleSpeed = 2.0;
       counter.textContent = `0/${maxObstacles}`;
+      document.body.style.background = "linear-gradient(180deg, #87CEFA, #fff)";
       spawnObstacle();
       obstacleInterval = setInterval(() => {
         if (gameActive) spawnObstacle();
@@ -214,6 +227,7 @@ created by @cryptoism_eth
       obstacleCount = 0;
       obstacleSpeed = 2.0;
       counter.textContent = `0/${maxObstacles}`;
+      document.body.style.background = "linear-gradient(180deg, #87CEFA, #fff)";
       spawnObstacle();
       obstacleInterval = setInterval(() => {
         if (gameActive) spawnObstacle();
