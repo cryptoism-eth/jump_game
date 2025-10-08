@@ -1,4 +1,3 @@
-cryptoism_eth
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,11 +31,6 @@ cryptoism_eth
       width: 50px;
       height: 50px;
       background: green;
-      animation: move 2s linear forwards;
-    }
-    @keyframes move {
-      from { right: -50px; }
-      to { right: 100vw; }
     }
     #gameOver, #startScreen {
       display: none;
@@ -81,6 +75,8 @@ cryptoism_eth
     let isJumping = false;
     let gameActive = false;
     let obstacleInterval;
+    let speed = 5; // başlangıç hızı
+    let obstacleCount = 0; // kaç engel geçti sayısı
 
     window.onload = () => {
       startScreen.style.display = "block";
@@ -120,6 +116,8 @@ cryptoism_eth
       obstacle.style.right = "-50px";
       game.appendChild(obstacle);
 
+      let pos = -50;
+
       const move = setInterval(() => {
         if (!gameActive) {
           clearInterval(move);
@@ -127,10 +125,12 @@ cryptoism_eth
           return;
         }
 
+        pos += speed;
+        obstacle.style.right = pos + "px";
+
         const obstacleRect = obstacle.getBoundingClientRect();
         const playerRect = player.getBoundingClientRect();
 
-        // 🎯 Daha doğru çarpışma kontrolü
         const horizontallyTouching =
           obstacleRect.left < playerRect.right - 10 &&
           obstacleRect.right > playerRect.left + 10;
@@ -147,9 +147,18 @@ cryptoism_eth
           obstacle.remove();
         }
 
-        if (obstacleRect.left <= 0) {
+        if (obstacleRect.right >= window.innerWidth + 50) {
           obstacle.remove();
           clearInterval(move);
+
+          // Engel geçtiyse sayacı artır
+          if (gameActive) {
+            obstacleCount++;
+            if (obstacleCount % 10 === 0) {
+              speed *= 1.2; // %20 hız artışı
+              console.log("Speed increased to:", speed);
+            }
+          }
         }
       }, 20);
     }
@@ -158,6 +167,8 @@ cryptoism_eth
       startScreen.style.display = "none";
       gameOver.style.display = "none";
       gameActive = true;
+      speed = 5;
+      obstacleCount = 0;
       spawnObstacle();
       obstacleInterval = setInterval(() => {
         if (gameActive) spawnObstacle();
@@ -167,6 +178,8 @@ cryptoism_eth
     function restart() {
       gameOver.style.display = "none";
       gameActive = true;
+      speed = 5;
+      obstacleCount = 0;
       spawnObstacle();
       obstacleInterval = setInterval(() => {
         if (gameActive) spawnObstacle();
@@ -175,3 +188,7 @@ cryptoism_eth
   </script>
 </body>
 </html>
+
+
+
+build by @cryptoism_eth
