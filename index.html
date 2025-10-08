@@ -32,13 +32,13 @@ index.html
       width: 50px;
       height: 50px;
       background: green;
-      animation: move 2s linear infinite;
+      animation: move 2s linear forwards;
     }
     @keyframes move {
       from { right: -50px; }
       to { right: 100vw; }
     }
-    #gameOver {
+    #gameOver, #startScreen {
       display: none;
       position: absolute;
       top: 40%;
@@ -47,23 +47,54 @@ index.html
       font-size: 40px;
       color: #333;
     }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 20px;
+      cursor: pointer;
+      border-radius: 10px;
+      border: none;
+      background-color: #ff4747;
+      color: white;
+    }
   </style>
 </head>
 <body>
   <div id="game">
     <div id="player"></div>
-    <div id="gameOver">Game Over<br><button onclick="restart()">Restart</button></div>
+    <div id="startScreen">
+      <div>Jump or Die</div>
+      <button onclick="startGame()">Start Game</button>
+    </div>
+    <div id="gameOver">
+      Game Over
+      <br><button onclick="restart()">Restart</button>
+    </div>
   </div>
 
   <script>
     const player = document.getElementById("player");
     const game = document.getElementById("game");
     const gameOver = document.getElementById("gameOver");
-    let isJumping = false;
-    let gameActive = true;
+    const startScreen = document.getElementById("startScreen");
 
+    let isJumping = false;
+    let gameActive = false;
+    let obstacleInterval;
+
+    // --- Başlatma ekranını göster ---
+    window.onload = () => {
+      startScreen.style.display = "block";
+    };
+
+    // --- Space tuşu ile zıplama ---
     document.addEventListener("keydown", (e) => {
       if (e.code === "Space" && !isJumping && gameActive) jump();
+    });
+
+    // --- Mobil dokunma ile zıplama ---
+    document.addEventListener("touchstart", () => {
+      if (!isJumping && gameActive) jump();
     });
 
     function jump() {
@@ -77,13 +108,13 @@ index.html
               clearInterval(down);
               isJumping = false;
             }
-            pos -= 5;
+            pos -= 10; // daha hızlı iniş
             player.style.bottom = 50 + pos + "px";
-          }, 20);
+          }, 15);
         }
-        pos += 5;
+        pos += 10; // daha hızlı çıkış
         player.style.bottom = 50 + pos + "px";
-      }, 20);
+      }, 15);
     }
 
     function spawnObstacle() {
@@ -92,22 +123,43 @@ index.html
       obstacle.style.right = "-50px";
       game.appendChild(obstacle);
 
-      let move = setInterval(() => {
+      const move = setInterval(() => {
+        if (!gameActive) {
+          clearInterval(move);
+          obstacle.remove();
+          return;
+        }
+
         const obstacleRect = obstacle.getBoundingClientRect();
         const playerRect = player.getBoundingClientRect();
+
+        // Çarpışma kontrolü
         if (
           obstacleRect.left < playerRect.right &&
           obstacleRect.right > playerRect.left &&
-          obstacleRect.bottom > playerRect.top
+          obstacleRect.bottom > playerRect.top + 10
         ) {
           clearInterval(move);
           gameOver.style.display = "block";
           gameActive = false;
+          clearInterval(obstacleInterval);
+          obstacle.remove();
+        }
+
+        // Engel ekrandan çıktıysa kaldır
+        if (obstacleRect.left <= 0) {
+          obstacle.remove();
+          clearInterval(move);
         }
       }, 20);
+    }
 
-      setTimeout(() => {
-        obstacle.remove();
+    function startGame() {
+      startScreen.style.display = "none";
+      gameOver.style.display = "none";
+      gameActive = true;
+      spawnObstacle();
+      obstacleInterval = setInterval(() => {
         if (gameActive) spawnObstacle();
       }, 2000);
     }
@@ -116,9 +168,11 @@ index.html
       gameOver.style.display = "none";
       gameActive = true;
       spawnObstacle();
+      obstacleInterval = setInterval(() => {
+        if (gameActive) spawnObstacle();
+      }, 2000);
     }
-
-    spawnObstacle();
   </script>
 </body>
 </html>
+
