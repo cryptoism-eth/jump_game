@@ -82,17 +82,14 @@ index.html
     let gameActive = false;
     let obstacleInterval;
 
-    // --- Başlatma ekranını göster ---
     window.onload = () => {
       startScreen.style.display = "block";
     };
 
-    // --- Space tuşu ile zıplama ---
     document.addEventListener("keydown", (e) => {
       if (e.code === "Space" && !isJumping && gameActive) jump();
     });
 
-    // --- Mobil dokunma ile zıplama ---
     document.addEventListener("touchstart", () => {
       if (!isJumping && gameActive) jump();
     });
@@ -108,11 +105,11 @@ index.html
               clearInterval(down);
               isJumping = false;
             }
-            pos -= 10; // daha hızlı iniş
+            pos -= 10;
             player.style.bottom = 50 + pos + "px";
           }, 15);
         }
-        pos += 10; // daha hızlı çıkış
+        pos += 10;
         player.style.bottom = 50 + pos + "px";
       }, 15);
     }
@@ -127,52 +124,6 @@ index.html
         if (!gameActive) {
           clearInterval(move);
           obstacle.remove();
-          return;
-        }
+          re
 
-        const obstacleRect = obstacle.getBoundingClientRect();
-        const playerRect = player.getBoundingClientRect();
-
-        // Çarpışma kontrolü
-        if (
-          obstacleRect.left < playerRect.right &&
-          obstacleRect.right > playerRect.left &&
-          obstacleRect.bottom > playerRect.top + 10
-        ) {
-          clearInterval(move);
-          gameOver.style.display = "block";
-          gameActive = false;
-          clearInterval(obstacleInterval);
-          obstacle.remove();
-        }
-
-        // Engel ekrandan çıktıysa kaldır
-        if (obstacleRect.left <= 0) {
-          obstacle.remove();
-          clearInterval(move);
-        }
-      }, 20);
-    }
-
-    function startGame() {
-      startScreen.style.display = "none";
-      gameOver.style.display = "none";
-      gameActive = true;
-      spawnObstacle();
-      obstacleInterval = setInterval(() => {
-        if (gameActive) spawnObstacle();
-      }, 2000);
-    }
-
-    function restart() {
-      gameOver.style.display = "none";
-      gameActive = true;
-      spawnObstacle();
-      obstacleInterval = setInterval(() => {
-        if (gameActive) spawnObstacle();
-      }, 2000);
-    }
-  </script>
-</body>
-</html>
-
+        
