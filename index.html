@@ -1,0 +1,129 @@
+index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jump Game</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: linear-gradient(180deg, #87CEFA, #fff);
+      font-family: sans-serif;
+    }
+    #game {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #player {
+      position: absolute;
+      bottom: 50px;
+      left: 100px;
+      width: 50px;
+      height: 50px;
+      background: red;
+      border-radius: 10px;
+    }
+    .obstacle {
+      position: absolute;
+      bottom: 50px;
+      width: 50px;
+      height: 50px;
+      background: green;
+      animation: move 2s linear infinite;
+    }
+    @keyframes move {
+      from { right: -50px; }
+      to { right: 100vw; }
+    }
+    #gameOver {
+      display: none;
+      position: absolute;
+      top: 40%;
+      width: 100%;
+      text-align: center;
+      font-size: 40px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <div id="player"></div>
+    <div id="gameOver">Game Over<br><button onclick="restart()">Restart</button></div>
+  </div>
+
+  <script>
+    const player = document.getElementById("player");
+    const game = document.getElementById("game");
+    const gameOver = document.getElementById("gameOver");
+    let isJumping = false;
+    let gameActive = true;
+
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Space" && !isJumping && gameActive) jump();
+    });
+
+    // 👇 mobil dokunma desteği
+    document.addEventListener("touchstart", () => {
+      if (!isJumping && gameActive) jump();
+    });
+
+    function jump() {
+      isJumping = true;
+      let pos = 0;
+      const up = setInterval(() => {
+        if (pos >= 150) {
+          clearInterval(up);
+          const down = setInterval(() => {
+            if (pos <= 0) {
+              clearInterval(down);
+              isJumping = false;
+            }
+            pos -= 5;
+            player.style.bottom = 50 + pos + "px";
+          }, 20);
+        }
+        pos += 5;
+        player.style.bottom = 50 + pos + "px";
+      }, 20);
+    }
+
+    function spawnObstacle() {
+      const obstacle = document.createElement("div");
+      obstacle.classList.add("obstacle");
+      obstacle.style.right = "-50px";
+      game.appendChild(obstacle);
+
+      let move = setInterval(() => {
+        const obstacleRect = obstacle.getBoundingClientRect();
+        const playerRect = player.getBoundingClientRect();
+        if (
+          obstacleRect.left < playerRect.right &&
+          obstacleRect.right > playerRect.left &&
+          obstacleRect.bottom > playerRect.top
+        ) {
+          clearInterval(move);
+          gameOver.style.display = "block";
+          gameActive = false;
+        }
+      }, 20);
+
+      setTimeout(() => {
+        obstacle.remove();
+        if (gameActive) spawnObstacle();
+      }, 2000);
+    }
+
+    function restart() {
+      gameOver.style.display = "none";
+      gameActive = true;
+      spawnObstacle();
+    }
+
+    spawnObstacle();
+  </script>
+</body>
+</html>
