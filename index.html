@@ -82,14 +82,17 @@ index.html
     let gameActive = false;
     let obstacleInterval;
 
+    // --- Başlatma ekranını göster ---
     window.onload = () => {
       startScreen.style.display = "block";
     };
 
+    // --- Space tuşu ile zıplama ---
     document.addEventListener("keydown", (e) => {
       if (e.code === "Space" && !isJumping && gameActive) jump();
     });
 
+    // --- Mobil dokunma ile zıplama ---
     document.addEventListener("touchstart", () => {
       if (!isJumping && gameActive) jump();
     });
@@ -105,11 +108,11 @@ index.html
               clearInterval(down);
               isJumping = false;
             }
-            pos -= 10;
+            pos -= 10; // daha hızlı iniş
             player.style.bottom = 50 + pos + "px";
           }, 15);
         }
-        pos += 10;
+        pos += 10; // daha hızlı çıkış
         player.style.bottom = 50 + pos + "px";
       }, 15);
     }
@@ -130,16 +133,12 @@ index.html
         const obstacleRect = obstacle.getBoundingClientRect();
         const playerRect = player.getBoundingClientRect();
 
-        // 💡 çarpışma kontrolü düzeltildi (üstten atladığında temas saymıyor)
-        const horizontallyTouching =
-          obstacleRect.left < playerRect.right - 10 &&
-          obstacleRect.right > playerRect.left + 10;
-
-        const verticallyTouching =
-          playerRect.bottom > obstacleRect.top + 10 &&
-          playerRect.top < obstacleRect.bottom - 10;
-
-        if (horizontallyTouching && verticallyTouching) {
+        // Çarpışma kontrolü
+        if (
+          obstacleRect.left < playerRect.right &&
+          obstacleRect.right > playerRect.left &&
+          obstacleRect.bottom > playerRect.top + 10
+        ) {
           clearInterval(move);
           gameOver.style.display = "block";
           gameActive = false;
@@ -147,6 +146,7 @@ index.html
           obstacle.remove();
         }
 
+        // Engel ekrandan çıktıysa kaldır
         if (obstacleRect.left <= 0) {
           obstacle.remove();
           clearInterval(move);
@@ -175,4 +175,3 @@ index.html
   </script>
 </body>
 </html>
-
