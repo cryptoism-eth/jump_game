@@ -12,33 +12,38 @@
       font-family: sans-serif;
       transition: background 1s ease;
     }
+
     #game {
       position: relative;
       width: 100vw;
       height: 100vh;
       overflow: hidden;
     }
+
+    /* SVG Player */
     #player {
       position: absolute;
       bottom: 50px;
       left: 100px;
-      width: 75px;
+      width: 75px;   /* %50 önceki boyuttan büyük */
       height: 75px;
-      background: red;
-      border-radius: 10px;
+      background: url('player.svg') center/contain no-repeat;
     }
+
     .obstacle {
       position: absolute;
       bottom: 50px;
       width: 50px;
       height: 50px;
-      background: green;
+      background: url('obstacle.svg') center/contain no-repeat;
       animation: move linear forwards;
     }
+
     @keyframes move {
       from { right: -50px; }
       to { right: 100vw; }
     }
+
     #gameOver, #startScreen, #winner {
       display: none;
       position: absolute;
@@ -49,6 +54,7 @@
       color: #fff;
       text-shadow: 2px 2px 5px #000;
     }
+
     #counter {
       position: absolute;
       top: 20px;
@@ -59,6 +65,7 @@
       color: #fff;
       text-shadow: 1px 1px 3px #000;
     }
+
     button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -69,6 +76,7 @@
       background-color: #ff4747;
       color: white;
     }
+
     .confetti {
       position: fixed;
       width: 10px;
@@ -76,6 +84,7 @@
       background: hsl(var(--hue), 80%, 60%);
       animation: fall 3s linear forwards;
     }
+
     @keyframes fall {
       to {
         transform: translateY(100vh) rotate(720deg);
@@ -114,23 +123,24 @@
     let obstacleCount = 0;
     const maxObstacles = 200;
 
-    // 🌴 Farklı kumsal arka planları
     const backgrounds = [
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=90",
-      "https://images.unsplash.com/photo-1520962914527-2e0a197a43fc?auto=format&fit=crop&w=1600&q=80"
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80"
     ];
 
-    let bgIndex = 0;
-
-    window.onload = () => { startScreen.style.display = "block"; };
+    window.onload = () => {
+      startScreen.style.display = "block";
+    };
 
     document.addEventListener("keydown", (e) => {
       if ((e.code === "Space" || e.code === "ArrowUp") && !isJumping && gameActive) jump();
     });
 
-    document.addEventListener("touchstart", () => { if (!isJumping && gameActive) jump(); });
+    document.addEventListener("touchstart", () => {
+      if (!isJumping && gameActive) jump();
+    });
 
     function jump() {
       isJumping = true;
@@ -154,6 +164,7 @@
 
     function spawnObstacle() {
       if (!gameActive) return;
+
       const obstacle = document.createElement("div");
       obstacle.classList.add("obstacle");
       obstacle.style.animationDuration = obstacleSpeed + "s";
@@ -168,8 +179,14 @@
 
         const obstacleRect = obstacle.getBoundingClientRect();
         const playerRect = player.getBoundingClientRect();
-        const horizontallyTouching = obstacleRect.left < playerRect.right - 10 && obstacleRect.right > playerRect.left + 10;
-        const verticallyTouching = playerRect.bottom > obstacleRect.top + 20 && playerRect.top < obstacleRect.bottom - 5;
+
+        const horizontallyTouching =
+          obstacleRect.left < playerRect.right - 10 &&
+          obstacleRect.right > playerRect.left + 10;
+
+        const verticallyTouching =
+          playerRect.bottom > obstacleRect.top + 20 &&
+          playerRect.top < obstacleRect.bottom - 5;
 
         if (horizontallyTouching && verticallyTouching) {
           clearInterval(move);
@@ -189,20 +206,19 @@
       obstacleCount++;
       counter.textContent = `${obstacleCount}/${maxObstacles}`;
 
-      if (obstacleCount % 5 === 0) obstacleSpeed *= 0.9; 
-
-      // 🔄 Arka plan değişimi
-      if (obstacleCount % 50 === 0 && obstacleCount < maxObstacles) {
-        bgIndex = (bgIndex + 1) % backgrounds.length;
-        document.body.style.background = `url('${backgrounds[bgIndex]}') center/cover no-repeat`;
-      }
-
+      if (obstacleCount % 5 === 0) obstacleSpeed *= 0.9;
+      if (obstacleCount % 50 === 0 && obstacleCount < maxObstacles) changeBackground();
       if (obstacleCount >= maxObstacles) {
         gameActive = false;
         clearInterval(obstacleInterval);
         triggerConfetti();
         winnerScreen.style.display = "block";
       }
+    }
+
+    function changeBackground() {
+      const index = Math.floor(Math.random() * backgrounds.length);
+      document.body.style.background = `url('${backgrounds[index]}') center/cover no-repeat`;
     }
 
     function triggerConfetti() {
@@ -232,10 +248,11 @@
       obstacleCount = 0;
       obstacleSpeed = 2.0;
       counter.textContent = `0/${maxObstacles}`;
-      bgIndex = 0;
-      document.body.style.background = `url('${backgrounds[bgIndex]}') center/cover no-repeat`;
+      document.body.style.background = `url('${backgrounds[0]}') center/cover no-repeat`;
       spawnObstacle();
-      obstacleInterval = setInterval(() => { if (gameActive) spawnObstacle(); }, 1500);
+      obstacleInterval = setInterval(() => {
+        if (gameActive) spawnObstacle();
+      }, 1500);
     }
 
     function restart() {
@@ -245,10 +262,11 @@
       obstacleCount = 0;
       obstacleSpeed = 2.0;
       counter.textContent = `0/${maxObstacles}`;
-      bgIndex = 0;
-      document.body.style.background = `url('${backgrounds[bgIndex]}') center/cover no-repeat`;
+      document.body.style.background = `url('${backgrounds[0]}') center/cover no-repeat`;
       spawnObstacle();
-      obstacleInterval = setInterval(() => { if (gameActive) spawnObstacle(); }, 1500);
+      obstacleInterval = setInterval(() => {
+        if (gameActive) spawnObstacle();
+      }, 1500);
     }
   </script>
 </body>
