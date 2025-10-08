@@ -1,4 +1,4 @@
-creadet by @cryptoism_eth
+created by @cryptoism_eth
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -113,7 +113,10 @@ creadet by @cryptoism_eth
     let obstacleCount = 0;
     const maxObstacles = 200;
 
+    // 🌴 Farklı kumsal arka planları
     const backgrounds = [
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80"
     ];
@@ -192,19 +195,20 @@ creadet by @cryptoism_eth
       if (!gameActive) return;
       obstacleCount++;
       counter.textContent = `${obstacleCount}/${maxObstacles}`;
-      if (obstacleCount % 5 === 0) obstacleSpeed *= 0.9;
-      if (obstacleCount % 50 === 0 && obstacleCount < maxObstacles) changeBackground();
+      if (obstacleCount % 5 === 0) obstacleSpeed *= 0.9; // %10 hız artışı
+
+      // 🔄 Her 50 engelde arka plan değişimi
+      if (obstacleCount % 50 === 0 && obstacleCount < maxObstacles) {
+        const index = Math.floor(Math.random() * backgrounds.length);
+        document.body.style.background = `url('${backgrounds[index]}') center/cover no-repeat`;
+      }
+
       if (obstacleCount >= maxObstacles) {
         gameActive = false;
         clearInterval(obstacleInterval);
         triggerConfetti();
         winnerScreen.style.display = "block";
       }
-    }
-
-    function changeBackground() {
-      const index = Math.floor(Math.random() * backgrounds.length);
-      document.body.style.background = `url('${backgrounds[index]}') center/cover no-repeat`;
     }
 
     function triggerConfetti() {
