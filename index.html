@@ -124,6 +124,55 @@ index.html
         if (!gameActive) {
           clearInterval(move);
           obstacle.remove();
-          re
+          return;
+        }
 
-        
+        const obstacleRect = obstacle.getBoundingClientRect();
+        const playerRect = player.getBoundingClientRect();
+
+        // 💡 çarpışma kontrolü düzeltildi (üstten atladığında temas saymıyor)
+        const horizontallyTouching =
+          obstacleRect.left < playerRect.right - 10 &&
+          obstacleRect.right > playerRect.left + 10;
+
+        const verticallyTouching =
+          playerRect.bottom > obstacleRect.top + 10 &&
+          playerRect.top < obstacleRect.bottom - 10;
+
+        if (horizontallyTouching && verticallyTouching) {
+          clearInterval(move);
+          gameOver.style.display = "block";
+          gameActive = false;
+          clearInterval(obstacleInterval);
+          obstacle.remove();
+        }
+
+        if (obstacleRect.left <= 0) {
+          obstacle.remove();
+          clearInterval(move);
+        }
+      }, 20);
+    }
+
+    function startGame() {
+      startScreen.style.display = "none";
+      gameOver.style.display = "none";
+      gameActive = true;
+      spawnObstacle();
+      obstacleInterval = setInterval(() => {
+        if (gameActive) spawnObstacle();
+      }, 2000);
+    }
+
+    function restart() {
+      gameOver.style.display = "none";
+      gameActive = true;
+      spawnObstacle();
+      obstacleInterval = setInterval(() => {
+        if (gameActive) spawnObstacle();
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
+
