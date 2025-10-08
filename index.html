@@ -3,15 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jump or Die 🕹️</title>
+    <title>Jump Game</title>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
       body {
-        background-color: #111;
+        background: #111;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -21,10 +16,9 @@
         position: relative;
         width: 600px;
         height: 200px;
-        background: linear-gradient(to top, #222, #333);
-        border: 2px solid #555;
-        border-radius: 12px;
+        background: #222;
         overflow: hidden;
+        border-radius: 10px;
       }
       #player {
         position: absolute;
@@ -32,8 +26,7 @@
         left: 50px;
         width: 30px;
         height: 30px;
-        background: #ff4747;
-        border-radius: 6px;
+        background: red;
       }
       #obstacle {
         position: absolute;
@@ -41,11 +34,7 @@
         right: 0;
         width: 30px;
         height: 30px;
-        background: #00ff88;
-        border-radius: 6px;
+        background: lime;
       }
       #game-over {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%,
+        position:
