@@ -1,17 +1,17 @@
-   created by @cryptoism_eth
-   <!DOCTYPE html>
+builder by cryptoism_eth
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Jump Game</title>
   <style>
     body {
-  margin: 0;
-  overflow: hidden;
-  background: url('images/background1.png') center/cover no-repeat;
-  font-family: sans-serif;
-  transition: background 1s ease;
-}
+      margin: 0;
+      overflow: hidden;
+      background: url('images/background1.png') center/cover no-repeat;
+      font-family: sans-serif;
+      transition: background 1s ease;
+    }
 
     #game {
       position: relative;
@@ -19,15 +19,17 @@
       height: 100vh;
       overflow: hidden;
     }
+
     #player {
-  position: absolute;
-  bottom: 50px;
-  left: 100px;
-  width: 175px;
-  height: 175px;
-  background: url('player.png') center/contain no-repeat;
-  border-radius: 0; /* Eğer köşeler kare olsun istersen */
-}
+      position: absolute;
+      bottom: 50px;
+      left: 100px;
+      width: 175px;
+      height: 175px;
+      background: url('player.png') center/contain no-repeat;
+      border-radius: 0;
+    }
+
     .obstacle {
       position: absolute;
       bottom: 50px;
@@ -36,10 +38,12 @@
       background: green;
       animation: move linear forwards;
     }
+
     @keyframes move {
       from { right: -50px; }
       to { right: 100vw; }
     }
+
     #gameOver, #startScreen, #winner {
       display: none;
       position: absolute;
@@ -50,6 +54,7 @@
       color: #fff;
       text-shadow: 2px 2px 5px #000;
     }
+
     #counter {
       position: absolute;
       top: 20px;
@@ -60,6 +65,7 @@
       color: #fff;
       text-shadow: 1px 1px 3px #000;
     }
+
     button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -70,6 +76,7 @@
       background-color: #ff4747;
       color: white;
     }
+
     .confetti {
       position: fixed;
       width: 10px;
@@ -77,6 +84,7 @@
       background: hsl(var(--hue), 80%, 60%);
       animation: fall 3s linear forwards;
     }
+
     @keyframes fall {
       to {
         transform: translateY(100vh) rotate(720deg);
@@ -115,21 +123,18 @@
     let obstacleCount = 0;
     const maxObstacles = 200;
 
-    // 🌴 Farklı kumsal arka planları
     const backgrounds = [
       "images/background1.png",
       "images/background2.png",
       "images/background3.png",
       "images/background4.png"
-       
-     ];
-
+    ];
 
     let bgIndex = 0;
 
     window.onload = () => { startScreen.style.display = "block"; };
 
-    document.addEventListener("keydown", (e) => {
+    document.addEventListener("keydown", e => {
       if ((e.code === "Space" || e.code === "ArrowUp") && !isJumping && gameActive) jump();
     });
 
@@ -192,9 +197,8 @@
       obstacleCount++;
       counter.textContent = `${obstacleCount}/${maxObstacles}`;
 
-      if (obstacleCount % 5 === 0) obstacleSpeed *= 0.9; 
+      if (obstacleCount % 5 === 0) obstacleSpeed *= 0.9;
 
-      // 🔄 Arka plan değişimi
       if (obstacleCount % 50 === 0 && obstacleCount < maxObstacles) {
         bgIndex = (bgIndex + 1) % backgrounds.length;
         document.body.style.background = `url('${backgrounds[bgIndex]}') center/cover no-repeat`;
