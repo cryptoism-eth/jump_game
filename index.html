@@ -1,3 +1,4 @@
+build by @cryptoism.eth
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,9 +76,9 @@
     let isJumping = false;
     let gameActive = false;
     let obstacleInterval;
-    let baseSpeed = 5;   // Başlangıç hızı (değişmeyecek referans)
-    let currentSpeed = 5; // Dinamik hız
-    let obstacleCount = 0; // Geçilen engel sayısı
+    let baseSpeed = 15;   // 🚀 Başlangıç hızı artırıldı (önceden 5'ti)
+    let currentSpeed = baseSpeed;
+    let obstacleCount = 0;
 
     window.onload = () => {
       startScreen.style.display = "block";
@@ -169,8 +170,8 @@
       startScreen.style.display = "none";
       gameOver.style.display = "none";
       gameActive = true;
-      baseSpeed = 5;
-      currentSpeed = 5;
+      baseSpeed = 15; // Başlangıç hızı
+      currentSpeed = baseSpeed;
       obstacleCount = 0;
       spawnObstacle();
       obstacleInterval = setInterval(() => {
@@ -181,7 +182,7 @@
     function restart() {
       gameOver.style.display = "none";
       gameActive = true;
-      currentSpeed = 5;
+      currentSpeed = baseSpeed;
       obstacleCount = 0;
       spawnObstacle();
       obstacleInterval = setInterval(() => {
@@ -191,7 +192,3 @@
   </script>
 </body>
 </html>
-
-
-
-build by @cryptoism_eth
